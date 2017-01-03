@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  telegraf:
+    image: nightech/telegraf
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro # required for input-docker
+      - /sys:/rootfs/sys:ro # required for input-host
+      - /proc:/rootfs/proc:ro # required for input-host
+      - /etc:/rootfs/etc:ro # required for input-host
+    environment:
+      INPUT_DOCKER_ENDPOINT: "unix:///var/run/docker.sock"
+      INPUT_ELASTICSEARCH_SERVERS: '["http://elasticsearch:9200"]'
+      INPUT_INFLUXDB_SERVERS: '["http://influxdb:8086/debug/vars"]'
+      INPUT_MYSQL_SERVERS: '["root:@tcp(mysql-server:3306)/"]'
+      INPUT_NGINX_SERVERS: '["http://nginx:8080/"]'
+      INPUT_OS: "on"
+      INPUT_PHPFPM_SERVERS: '["fcgi://fpm:9000/fpm-status?full"]'
+      INPUT_RABBITMQ_SERVER: "http://rabbitmq:15672"
+      INPUT_RABBITMQ_USER: "guest"
+      INPUT_RABBITMQ_PASSWORD: "guest"
+      INPUT_REDIS_SERVERS: '["tcp://redis:6379"]'
+      INPUT_STATSD_ADDRESS: ":8125"
+
+      OUTPUT_INFLUXDB_SERVERS: '["http://influxdb:8086/"]'
+      OUTPUT_INFLUXDB_DATABASE: "telegraf"
+
+      HOST_PROC: /rootfs/proc # required for input-host
+      HOST_SYS: /rootfs/sys # required for input-host
+      HOST_ETC: /rootfs/etc # required for input-host
