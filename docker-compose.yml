@@ -3,27 +3,36 @@ version: '2'
 services:
   telegraf:
     image: nightech/telegraf
+    # build:
+    #   context: ./
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro # required for input-docker
       - /sys:/rootfs/sys:ro # required for input-host
       - /proc:/rootfs/proc:ro # required for input-host
       - /etc:/rootfs/etc:ro # required for input-host
     environment:
-      INPUT_DOCKER_ENDPOINT: "unix:///var/run/docker.sock"
-      INPUT_ELASTICSEARCH_SERVERS: '["http://elasticsearch:9200"]'
-      INPUT_INFLUXDB_SERVERS: '["http://influxdb:8086/debug/vars"]'
-      INPUT_MYSQL_SERVERS: '["root:@tcp(mysql-server:3306)/"]'
-      INPUT_NGINX_SERVERS: '["http://nginx:8080/"]'
-      INPUT_OS: "on"
-      INPUT_PHPFPM_SERVERS: '["fcgi://fpm:9000/fpm-status?full"]'
-      INPUT_RABBITMQ_SERVER: "http://rabbitmq:15672"
-      INPUT_RABBITMQ_USER: "guest"
-      INPUT_RABBITMQ_PASSWORD: "guest"
-      INPUT_REDIS_SERVERS: '["tcp://redis:6379"]'
-      INPUT_STATSD_ADDRESS: ":8125"
+      TG_HOSTNAME: '"my-hostname"'
+      TG_INPUT_DOCKER_ENDPOINT: '"unix:///var/run/docker.sock"'
+      TG_INPUT_ELASTICSEARCH_SERVERS: '["http://elasticsearch:9200"]'
+      TG_INPUT_INTERNAL: 'true'
+      TG_INPUT_INFLUXDB_SERVERS: '["http://influxdb:8086/debug/vars"]'
+      TG_INPUT_MYSQL_SERVERS: '["root:@tcp(mysql:3306)/"]'
+      TG_INPUT_MYSQL_USER_STATISTICS: 'false'
+      TG_INPUT_NET_INTERFACES: '[]'
+      TG_INPUT_NGINX_SERVERS: '["http://nginx:8080/"]'
+      TG_INPUT_OS: '"on"'
+      TG_INPUT_PHPFPM_SERVERS: '["fcgi://phpfpm:9000/fpm-status?full"]'
+      TG_INPUT_RABBITMQ_SERVER: '"http://rabbitmq:15672"'
+      TG_INPUT_RABBITMQ_USER: '"guest"'
+      TG_INPUT_RABBITMQ_PASSWORD: '"guest"'
+      TG_INPUT_REDIS_SERVERS: '["tcp://redis:6379"]'
+      TG_INPUT_STATSD_ADDRESS: '":8125"'
 
-      OUTPUT_INFLUXDB_SERVERS: '["http://influxdb:8086/"]'
-      OUTPUT_INFLUXDB_DATABASE: "telegraf"
+      TG_OUTPUT_INFLUXDB_SERVERS: '["http://influxdb:8086/"]'
+      TG_OUTPUT_INFLUXDB_DATABASE: '"telegraf"'
+      # TG_OUTPUT_INFLUXDB_USERNAME: '"telegraf"'
+      # TG_OUTPUT_INFLUXDB_PASSWORD: '"telegraf"'
+      TG_OUTPUT_FILE_FILES: '["/tmp/metrics.out"]'
 
       HOST_PROC: /rootfs/proc # required for input-host
       HOST_SYS: /rootfs/sys # required for input-host
